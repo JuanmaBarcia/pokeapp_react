@@ -9,14 +9,20 @@ class Card extends Component {
 
   render() {
     return (
-      <div>
+      <li className='Card'>
         <img
           src={this.props.data.sprites.front_default}
           alt={this.props.data.name}
         />
-        <p>Nombre: {this.props.data.name}</p>
-        <p>Tipo: {this.props.data.types[0].type.name}</p>
-      </div>
+        <p>
+          <strong>Nombre: </strong>
+          {this.props.data.name}
+        </p>
+        <p>
+          <strong>Tipo: </strong>
+          {this.props.data.types[0].type.name}
+        </p>
+      </li>
     );
   }
 }

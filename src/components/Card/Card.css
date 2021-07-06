@@ -1,7 +1,4 @@
-/*
- * Card css File
-*/
-
 .Card {
-    /* propertys here */
+  list-style: none;
+  margin: 15px;
 }
