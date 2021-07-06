@@ -52,16 +52,7 @@ function App() {
       ) : (
         ""
       )}
-      {pokeList.length > 0 ? (
-        <>
-          <h2>Historial de busqueda</h2>
-          <ul className='ListaPokemon'>
-            <ListaPokemon data={pokeList} />
-          </ul>
-        </>
-      ) : (
-        ""
-      )}
+      {pokeList.length > 0 ? <ListaPokemon data={pokeList} /> : ""}
     </div>
   );
 }

@@ -6,7 +6,12 @@ function ListaPokemon(props) {
   const renderCards = () =>
     props.data.map((pokemon) => <Card data={pokemon} />);
 
-  return renderCards();
+  return (
+    <>
+      <h2>Historial de busqueda</h2>
+      <ul className='ListaPokemon'>{renderCards()}</ul>
+    </>
+  );
 }
 
 export default ListaPokemon;
