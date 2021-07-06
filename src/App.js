@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import Card from "./components/Card";
 import ListaPokemon from "./components/ListaPokemon/ListaPokemon";
 import axios from "axios";
+import { debounce } from "lodash";
 
 function App() {
   const [pokemon, setPokemon] = useState("");
@@ -15,32 +16,52 @@ function App() {
     }
   }, [pokemon]);
 
-  useEffect(async () => {
-    if (pokeList.length === 0 && Object.keys(pokeCard).length !== 0) {
-      await setPokeList([pokeCard]);
-    } else if (pokeList.length !== 0 && Object.keys(pokeCard).length !== 0) {
-      await setPokeList([...pokeList, pokeCard]);
+  useEffect(() => {
+    const list = pokeList.map((pokemon) => pokemon.name);
+    if (!list.includes(pokeCard.name)) {
+      console.log(`no existe ${pokeCard.name}`);
+      if (pokeList.length === 0 && Object.keys(pokeCard).length !== 0) {
+        setPokeList([pokeCard]);
+      } else if (pokeList.length !== 0 && Object.keys(pokeCard).length !== 0) {
+        setPokeList([...pokeList, pokeCard]);
+      }
+    } else {
+      console.log(`existe ${pokeCard.name}`);
     }
   }, [pokeCard]);
 
   const getPokeInfo = async (name) => {
-    const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`);
-    const pokeInfo = res.data;
-    await setPokeCard(pokeInfo);
+    if (name.length > 1) {
+      const res = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
+      );
+      const pokeInfo = res.data;
+      setPokeCard(pokeInfo);
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await setPokemon(e.target.pokemon.value.toLowerCase());
+    setPokemon(e.target.pokemon.value.toLowerCase());
     e.target.reset();
+  };
+
+  const debouncedFetch = useCallback(debounce(getPokeInfo, 1000), []);
+
+  const handleChange = async (e) => {
+    const input = e.target.value;
+
+    if (input.length !== 0) {
+      debouncedFetch(input);
+    }
   };
 
   return (
     <div className='App'>
       <form onSubmit={handleSubmit}>
         <label htmlFor='pokemon'>Busca tu pokemon favorito</label>
-        <input type='text' name='pokemon' />
-        <button type='submit'>Enviar</button>
+        <input type='text' name='pokemon' onChange={handleChange} />
+        {/* <button type='submit'>Enviar</button> */}
       </form>
       {Object.keys(pokeCard).length !== 0 ? (
         <>

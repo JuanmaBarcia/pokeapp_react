@@ -4,7 +4,7 @@ import Card from "../Card";
 
 function ListaPokemon(props) {
   const renderCards = () =>
-    props.data.map((pokemon) => <Card data={pokemon} />);
+    props.data.map((pokemon, i) => <Card data={pokemon} key={i} />);
 
   return (
     <>
