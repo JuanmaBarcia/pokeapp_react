@@ -17,26 +17,21 @@ function App() {
   }, [pokemon]);
 
   useEffect(() => {
-    const list = pokeList.map((pokemon) => pokemon.name);
-    if (!list.includes(pokeCard.name)) {
-      console.log(`no existe ${pokeCard.name}`);
-      if (pokeList.length === 0 && Object.keys(pokeCard).length !== 0) {
-        setPokeList([pokeCard]);
-      } else if (pokeList.length !== 0 && Object.keys(pokeCard).length !== 0) {
-        setPokeList([...pokeList, pokeCard]);
-      }
-    } else {
-      console.log(`existe ${pokeCard.name}`);
+    if (Object.keys(pokeCard).length !== 0) {
+      setPokeList([...pokeList, pokeCard]);
     }
   }, [pokeCard]);
 
   const getPokeInfo = async (name) => {
-    if (name.length > 1) {
-      const res = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
-      );
-      const pokeInfo = res.data;
-      setPokeCard(pokeInfo);
+    const list = pokeList.map((pokemon) => pokemon.name);
+    if (!list.includes(name)) {
+      if (name.length > 1) {
+        const res = await axios.get(
+          `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
+        );
+        const pokeInfo = res.data;
+        setPokeCard(pokeInfo);
+      }
     }
   };
 
@@ -46,7 +41,7 @@ function App() {
     e.target.reset();
   };
 
-  const debouncedFetch = useCallback(debounce(getPokeInfo, 1000), []);
+  const debouncedFetch = useCallback(debounce(getPokeInfo, 1000), [pokeList]);
 
   const handleChange = async (e) => {
     const input = e.target.value;
