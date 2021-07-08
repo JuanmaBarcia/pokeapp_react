@@ -1,27 +1,26 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import Card from "./components/Card";
-import ListaPokemon from "./components/ListaPokemon/ListaPokemon";
+
 import axios from "axios";
-import { debounce } from "lodash";
+import { BrowserRouter } from "react-router-dom";
+import { appContext } from "./context/appContext";
+
+import Main from "./components/Main";
+import Footer from "./components/Footer";
 
 function App() {
-  const [pokemon, setPokemon] = useState("");
+  // const [pokemon, setPokemon] = useState("");
   const [pokeCard, setPokeCard] = useState({});
   const [pokeList, setPokeList] = useState([]);
-
-  useEffect(() => {
-    if (pokemon !== "") {
-      getPokeInfo(pokemon);
-    }
-  }, [pokemon]);
 
   useEffect(() => {
     if (Object.keys(pokeCard).length !== 0) {
       setPokeList([...pokeList, pokeCard]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pokeCard]);
 
+  // eslint-disable-next-line no-unused-vars
   const getPokeInfo = async (name) => {
     const list = pokeList.map((pokemon) => pokemon.name);
     if (!list.includes(name)) {
@@ -29,46 +28,41 @@ function App() {
         const res = await axios.get(
           `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
         );
-        const pokeInfo = res.data;
+        const pokeInfo = {
+          id: res.data.id,
+          name: res.data.name,
+          image: res.data.sprites.other["official-artwork"].front_default,
+          typeOne: res.data.types[0].type.name,
+          typeTwo: res.data.types[1] ? res.data.types[1].type.name : undefined,
+        };
+        console.log(res.data);
+
         setPokeCard(pokeInfo);
       }
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setPokemon(e.target.pokemon.value.toLowerCase());
-    e.target.reset();
+  const addPokemon = (newPokemon) => {
+    setPokeCard(newPokemon);
   };
 
-  const debouncedFetch = useCallback(debounce(getPokeInfo, 1000), [pokeList]);
-
-  const handleChange = async (e) => {
-    const input = e.target.value;
-
-    if (input.length !== 0) {
-      debouncedFetch(input);
-    }
+  const value = {
+    pokeCard,
+    setPokeCard,
+    pokeList,
+    setPokeList,
+    getPokeInfo,
+    addPokemon,
   };
 
   return (
     <div className='App'>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor='pokemon'>Busca tu pokemon favorito</label>
-        <input type='text' name='pokemon' onChange={handleChange} />
-        {/* <button type='submit'>Enviar</button> */}
-      </form>
-      {Object.keys(pokeCard).length !== 0 ? (
-        <>
-          <h2>Resultado de la busqueda</h2>
-          <ul>
-            <Card data={pokeCard} />
-          </ul>
-        </>
-      ) : (
-        ""
-      )}
-      {pokeList.length > 0 ? <ListaPokemon data={pokeList} /> : ""}
+      <appContext.Provider value={value}>
+        <BrowserRouter>
+          <Main />
+          <Footer />
+        </BrowserRouter>
+      </appContext.Provider>
     </div>
   );
 }

@@ -1,0 +1,6 @@
+.Main {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 30px auto 60px;
+}
