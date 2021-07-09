@@ -1,8 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import "./Details.css";
-
-import { useLocation } from "react-router-dom";
-import { appContext } from "../../context/appContext";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -20,49 +17,34 @@ const useStyles = makeStyles({
 function Details(props) {
   const classes = useStyles();
 
-  const { pokeList } = useContext(appContext);
-  const [pokeCard, setPokeCard] = useState({});
-
-  useEffect(() => {
-    getPokeInfo(pokeDetails);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const location = useLocation();
-  const url = location.pathname.split("/");
-  const id = url[url.length - 1];
-  // eslint-disable-next-line eqeqeq
-  const pokeDetails = pokeList.find((pokemon) => pokemon.id == id);
-
-  const getPokeInfo = (data) => {
-    setPokeCard(data);
-  };
+  const name = new URLSearchParams(props.location.search).get("name");
+  const image = new URLSearchParams(props.location.search).get("image");
+  const typeOne = new URLSearchParams(props.location.search).get("typeOne");
+  const typeTwo = new URLSearchParams(props.location.search).get("typeTwo");
 
   return (
     <>
       <h1>Detalles del Pokemon</h1>
-      {Object.entries(pokeCard).length !== 0 && (
-        <Card className={`Details ${classes.root}`}>
-          <CardActionArea>
-            <CardMedia
-              component='img'
-              alt={`imagen ${pokeCard.name}`}
-              // height='140'
-              image={pokeCard.image}
-              title={`imagen ${pokeCard.name}`}
-            />
-            <CardContent>
-              <Typography gutterBottom variant='h5' component='h2'>
-                {pokeCard.name.toUpperCase()}
-              </Typography>
-              <Typography gutterBottom variant='h6' component='h3'>
-                Tipo: {pokeCard.typeOne}
-                {pokeCard.typeTwo ? <>{` / ${pokeCard.typeTwo}`}</> : ""}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      )}
+      <Card className={`Details ${classes.root}`}>
+        <CardActionArea>
+          <CardMedia
+            component='img'
+            alt={`imagen ${name}`}
+            // height='140'
+            image={image}
+            title={`imagen ${name}`}
+          />
+          <CardContent>
+            <Typography gutterBottom variant='h5' component='h2'>
+              {name.toUpperCase()}
+            </Typography>
+            <Typography gutterBottom variant='h6' component='h3'>
+              Tipo: {typeOne}
+              {typeTwo ? <>{` / ${typeTwo}`}</> : ""}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
     </>
   );
 }

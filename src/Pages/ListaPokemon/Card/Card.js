@@ -21,7 +21,13 @@ function Card(props) {
 
   return (
     <CardUI className={`Card ${classes.root}`}>
-      <CardActionArea component={Link} to={`/pokemon/${props.data.id}`}>
+      <CardActionArea
+        component={Link}
+        to={`/pokemon/${props.data.id}?name=${props.data.name}&image=${
+          props.data.image
+        }&typeOne=${props.data.typeOne}${
+          props.data.typeTwo ? `&typeTwo=${props.data.typeTwo}` : ""
+        }`}>
         <CardMedia
           component='img'
           alt={`imagen ${props.data.name}`}
