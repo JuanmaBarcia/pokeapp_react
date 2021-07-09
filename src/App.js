@@ -35,8 +35,6 @@ function App() {
           typeOne: res.data.types[0].type.name,
           typeTwo: res.data.types[1] ? res.data.types[1].type.name : undefined,
         };
-        console.log(res.data);
-
         setPokeCard(pokeInfo);
       }
     }

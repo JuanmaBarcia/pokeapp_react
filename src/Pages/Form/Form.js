@@ -30,7 +30,11 @@ const useStyles = makeStyles((theme) => ({
 
 function Form() {
   const classes = useStyles();
-  const { addPokemon } = useContext(appContext);
+  const { addPokemon, pokeList } = useContext(appContext);
+
+  const ids = pokeList.map((pokemon) => pokemon.id);
+  const regex = "^(?!.*^" + ids.join("$|^") + "$).*$";
+  const regexIDs = new RegExp(regex);
 
   const {
     register,
@@ -55,9 +59,18 @@ function Form() {
           InputLabelProps={{
             shrink: true,
           }}
-          {...register("id", { required: true })}
+          {...register("id", { required: true, pattern: regexIDs })}
         />
-        {errors.id && <span className='error'>Este campo es requerido</span>}
+        {errors.id
+          ? errors.id.type === "required" && (
+              <span className='error'>Este campo es requerido</span>
+            )
+          : ""}
+        {errors.id
+          ? errors.id.type === "pattern" && (
+              <span className='error'>Este id ya existe</span>
+            )
+          : ""}
         <TextField
           id='standard-basic'
           label='Nombre'
@@ -149,3 +162,5 @@ function Form() {
 // </form>
 
 export default Form;
+
+// [132, 400, 25];

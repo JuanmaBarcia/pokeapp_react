@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Details.css";
 
-import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { appContext } from "../../context/appContext";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -20,29 +20,24 @@ const useStyles = makeStyles({
 function Details(props) {
   const classes = useStyles();
 
+  const { pokeList } = useContext(appContext);
   const [pokeCard, setPokeCard] = useState({});
 
   useEffect(() => {
-    getPokeInfo(id);
+    getPokeInfo(pokeDetails);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const location = useLocation();
   const url = location.pathname.split("/");
   const id = url[url.length - 1];
+  // eslint-disable-next-line eqeqeq
+  const pokeDetails = pokeList.find((pokemon) => pokemon.id == id);
 
-  const getPokeInfo = async (id) => {
-    const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
-    const pokeInfo = res.data;
-    setPokeCard(pokeInfo);
+  const getPokeInfo = (data) => {
+    setPokeCard(data);
   };
-  console.log(pokeCard);
 
-  let types = [];
-
-  if (Object.entries(pokeCard).length !== 0) {
-    types = pokeCard.types.map((type, i) => <li key={i}>{type.type.name}</li>);
-  }
   return (
     <>
       <h1>Detalles del Pokemon</h1>
@@ -53,10 +48,7 @@ function Details(props) {
               component='img'
               alt={`imagen ${pokeCard.name}`}
               // height='140'
-              image={
-                pokeCard.sprites.other["official-artwork"].front_default ||
-                pokeCard.image
-              }
+              image={pokeCard.image}
               title={`imagen ${pokeCard.name}`}
             />
             <CardContent>
@@ -64,8 +56,8 @@ function Details(props) {
                 {pokeCard.name.toUpperCase()}
               </Typography>
               <Typography gutterBottom variant='h6' component='h3'>
-                Tipo:
-                {types.map((type) => type)}
+                Tipo: {pokeCard.typeOne}
+                {pokeCard.typeTwo ? <>{` / ${pokeCard.typeTwo}`}</> : ""}
               </Typography>
             </CardContent>
           </CardActionArea>
