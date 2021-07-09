@@ -36,11 +36,37 @@ function Form() {
   const regex = "^(?!.*^" + ids.join("$|^") + "$).*$";
   const regexIDs = new RegExp(regex);
 
+  const typesOne = [
+    "Acero",
+    "Agua",
+    "Bicho",
+    "Dragón",
+    "Eléctrico",
+    "Fantasma",
+    "Fuego",
+    "Hada",
+    "Hielo",
+    "Lucha",
+    "Normal",
+    "Planta",
+    "Psíquico",
+    "Siniestro",
+    "Tierra",
+    "Veneno",
+    "Volador",
+  ];
+
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
+
+  console.log(watch("typeOne"));
+  console.log(typesOne);
+  const typesTwo = typesOne.filter((tipo) => tipo !== watch("typeOne"));
+  console.log(typesTwo);
 
   const onSubmit = (data) => addPokemon(data);
 
@@ -94,23 +120,9 @@ function Form() {
             labelId='demo-simple-select-label'
             id='demo-simple-select'
             {...register("typeOne", { required: true })}>
-            <MenuItem value={"Acero"}>Acero</MenuItem>
-            <MenuItem value={"Agua"}>Agua</MenuItem>
-            <MenuItem value={"Bicho"}>Bicho</MenuItem>
-            <MenuItem value={"Dragón"}>Dragón</MenuItem>
-            <MenuItem value={"Eléctrico"}>Eléctrico</MenuItem>
-            <MenuItem value={"Fantasma"}>Fantasma</MenuItem>
-            <MenuItem value={"Fuego"}>Fuego</MenuItem>
-            <MenuItem value={"Hada"}>Hada</MenuItem>
-            <MenuItem value={"Hielo"}>Hielo</MenuItem>
-            <MenuItem value={"Lucha"}>Lucha</MenuItem>
-            <MenuItem value={"Normal"}>Normal</MenuItem>
-            <MenuItem value={"Planta"}>Planta</MenuItem>
-            <MenuItem value={"Psíquico"}>Psíquico</MenuItem>
-            <MenuItem value={"Siniestro"}>Siniestro</MenuItem>
-            <MenuItem value={"Tierra"}>Tierra</MenuItem>
-            <MenuItem value={"Veneno"}>Veneno</MenuItem>
-            <MenuItem value={"Volador"}>Volador</MenuItem>
+            {typesOne.map((type) => (
+              <MenuItem value={type}>{type}</MenuItem>
+            ))}
           </Select>
         </FormControl>
         {errors.typeOne && (
@@ -123,23 +135,9 @@ function Form() {
             id='demo-simple-select'
             {...register("typeTwo")}>
             <MenuItem value={undefined}></MenuItem>
-            <MenuItem value={"Acero"}>Acero</MenuItem>
-            <MenuItem value={"Agua"}>Agua</MenuItem>
-            <MenuItem value={"Bicho"}>Bicho</MenuItem>
-            <MenuItem value={"Dragón"}>Dragón</MenuItem>
-            <MenuItem value={"Eléctrico"}>Eléctrico</MenuItem>
-            <MenuItem value={"Fantasma"}>Fantasma</MenuItem>
-            <MenuItem value={"Fuego"}>Fuego</MenuItem>
-            <MenuItem value={"Hada"}>Hada</MenuItem>
-            <MenuItem value={"Hielo"}>Hielo</MenuItem>
-            <MenuItem value={"Lucha"}>Lucha</MenuItem>
-            <MenuItem value={"Normal"}>Normal</MenuItem>
-            <MenuItem value={"Planta"}>Planta</MenuItem>
-            <MenuItem value={"Psíquico"}>Psíquico</MenuItem>
-            <MenuItem value={"Siniestro"}>Siniestro</MenuItem>
-            <MenuItem value={"Tierra"}>Tierra</MenuItem>
-            <MenuItem value={"Veneno"}>Veneno</MenuItem>
-            <MenuItem value={"Volador"}>Volador</MenuItem>
+            {typesTwo.map((type) => (
+              <MenuItem value={type}>{type}</MenuItem>
+            ))}
           </Select>
         </FormControl>
         <Button variant='contained' color='primary' type='submit'>
@@ -149,18 +147,5 @@ function Form() {
     </div>
   );
 }
-// <form onSubmit={handleSubmit(onSubmit)}>
-//   {/* register your input into the hook by invoking the "register" function */}
-//   <input defaultValue='test' {...register("example")} />
-
-//   {/* include validation with required or other standard HTML validation rules */}
-//   <input {...register("exampleRequired", { required: true })} />
-//   {/* errors will return when field validation fails  */}
-//   {errors.exampleRequired && <span>This field is required</span>}
-
-//   <input type='submit' />
-// </form>
 
 export default Form;
-
-// [132, 400, 25];
